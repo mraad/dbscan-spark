@@ -169,3 +169,4 @@ In `Cell 1`, the points `C` and `A` are classed as `G` and in `Cell 2`, the poin
 * <https://github.com/alitouka/spark_dbscan>
 * <https://github.com/irvingc/dbscan-on-spark>
 * <https://github.com/aizook/SparkAI>
+* <https://www.oreilly.com/ideas/clustering-geolocated-data-using-spark-and-dbscan>
