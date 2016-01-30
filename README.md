@@ -155,6 +155,7 @@ In `Cell 1`, the points `C` and `A` are classed as `G` and in `Cell 2`, the poin
 * Implement the Graph using [GraphX](http://spark.apache.org/graphx/).
 * Return 'noisy' points.
 * Make the `Point` implementation multidimensional with custom proximity calculation - (Note to self, is there a boundary issue ?)
+* I wonder if bandwidth as described [here](http://pro.arcgis.com/en/pro-app/tool-reference/spatial-analyst/how-kernel-density-works.htm) can be used as a "good" ![](media/eps.png) 
 
 ### References
 
