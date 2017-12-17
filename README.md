@@ -2,6 +2,10 @@
 
 [DBSCAN](https://en.wikipedia.org/wiki/DBSCAN) implementation on [Apache Spark](http://spark.apache.org/).
 
+### Update 2017-12-17
+
+I've update the core DBSCAN code (`DBSCAN2`) to include noise data that is close to a cluster as part of the cluster. Thanks to Randal W. and Erik H.  And please remember, in this implementation the concept of proximity is based on **bounding box** calculation and not distance squared.
+
 ## Building The Project
 
 The build process is based on [Apache Maven](https://maven.apache.org/) - However I've added an [SBT](http://www.scala-sbt.org/) build for reference. 
@@ -20,10 +24,7 @@ source /usr/local/bin/virtualenvwrapper.sh
 mkvirtualenv my-env
 
 pip install --upgrade pip
-pip install numpy
-pip install scipy
-pip install sklearn
-pip install matplotlib
+pip install numpy scipy sklearn matplotlib
 ```
 
 ```python
@@ -44,7 +45,7 @@ with open("/tmp/moons.txt", "wb") as fw:
 spark-submit\
  --master "local[*]"\
  --driver-java-options="-server -Xms1g -Xmx16g"\
- target/dbscan-spark-0.1.jar\
+ target/dbscan-spark-0.3.jar\
  moons.properties
 ```
 
@@ -61,6 +62,7 @@ Aggregate the output content into a single file for later visualization:
 
 ```bash
 cat /tmp/output/part* > /tmp/parts.csv
+rm -rf /tmp/output
 ```
 
 ## Visualize the Data
@@ -89,6 +91,7 @@ frameworkpython
 import numpy as np
 import matplotlib.colors as clr
 import matplotlib.pyplot as plt
+%matplotlib inline
 
 moons = np.genfromtxt('/tmp/moons.txt', delimiter=' ', names=['id', 'x', 'y'])
 plt.figure(1)
@@ -147,13 +150,13 @@ In `Cell 1`, the points `C` and `A` are classed as `G` and in `Cell 2`, the poin
 
 ## Issues (Not Deal Breakers)
 
-* The local DBSCAN implementation does not return 'noisy' points.
+* ~~The local DBSCAN implementation does not return 'noisy' points.~~
 * The neighborhood search in `SpatialIndex` is based on a bounding box search where the box is centered about the given point and the width and height of the box is ![](media/2eps.png). All the points that fall into the box are considered neighbors.
  
 ## TODO
 
 * Implement the Graph using [GraphX](http://spark.apache.org/graphx/).
-* Return 'noisy' points.
+* ~~Return 'noisy' points.~~
 * Make the `Point` implementation multidimensional with custom proximity calculation - (Note to self, is there a boundary issue ?)
 * I wonder if bandwidth as described [here](http://pro.arcgis.com/en/pro-app/tool-reference/spatial-analyst/how-kernel-density-works.htm) can be used as a "good" ![](media/eps.png) 
 
@@ -171,3 +174,23 @@ In `Cell 1`, the points `C` and `A` are classed as `G` and in `Cell 2`, the poin
 * <https://github.com/irvingc/dbscan-on-spark>
 * <https://github.com/aizook/SparkAI>
 * <https://www.oreilly.com/ideas/clustering-geolocated-data-using-spark-and-dbscan>
+
+## Notes to self
+
+```
+jupyter notebook --ip=0.0.0.0 --port=8888
+```
+
+```
+docker pull python:2.7
+docker run -i -t --rm -v $(pwd):/dbscan-spark python:2.7 bash
+```
+
+```
+csrutil disable; reboot
+```
+
+```
+pip uninstall numpy
+sudo rm -rf /System/Library/Frameworks/Python.framework/Versions/2.7/Extras/lib/python/numpy
+```

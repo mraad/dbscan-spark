@@ -5,26 +5,20 @@
 
     <groupId>com.esri</groupId>
     <artifactId>dbscan-spark</artifactId>
-    <version>0.1</version>
+    <version>0.3</version>
     <packaging>jar</packaging>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <scala.compact.version>2.10</scala.compact.version>
-        <scala.version>2.10.5</scala.version>
+        <scala.compact>2.10</scala.compact>
+        <scala.version>${scala.compact}.6</scala.version>
     </properties>
 
+    <!--
     <repositories>
         <repository>
-            <id>cloudera-releases</id>
+            <id>cloudera</id>
             <url>https://repository.cloudera.com/artifactory/cloudera-repos</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>scala-tools.org</id>
-            <url>https://oss.sonatype.org/content/groups/scala-tools/</url>
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
@@ -40,24 +34,27 @@
             </snapshots>
         </repository>
     </repositories>
+    -->
 
+    <!--
     <pluginRepositories>
         <pluginRepository>
             <id>scala-tools.org</id>
             <url>https://oss.sonatype.org/content/groups/scala-tools/</url>
         </pluginRepository>
     </pluginRepositories>
+    -->
 
     <dependencies>
         <dependency>
             <groupId>org.apache.spark</groupId>
-            <artifactId>spark-core_${scala.compact.version}</artifactId>
+            <artifactId>spark-core_${scala.compact}</artifactId>
             <version>${spark.version}</version>
             <scope>${spark-scope}</scope>
         </dependency>
         <dependency>
             <groupId>org.scalatest</groupId>
-            <artifactId>scalatest_${scala.compact.version}</artifactId>
+            <artifactId>scalatest_${scala.compact}</artifactId>
             <version>2.2.3</version>
             <scope>test</scope>
         </dependency>
@@ -69,7 +66,7 @@
                 <plugin>
                     <groupId>net.alchim31.maven</groupId>
                     <artifactId>scala-maven-plugin</artifactId>
-                    <version>3.2.2</version>
+                    <version>3.3.1</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -77,7 +74,7 @@
             <plugin>
                 <groupId>net.alchim31.maven</groupId>
                 <artifactId>scala-maven-plugin</artifactId>
-                <version>3.2.2</version>
+                <version>3.3.1</version>
                 <executions>
                     <execution>
                         <id>scala-compile-first</id>
@@ -95,7 +92,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <scalaCompatVersion>${scala.compact.version}</scalaCompatVersion>
+                    <scalaCompatVersion>${scala.compact}</scalaCompatVersion>
                     <scalaVersion>${scala.version}</scalaVersion>
                     <recompileMode>incremental</recompileMode>
                     <useZincServer>false</useZincServer>
@@ -104,7 +101,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.3</version>
+                <version>3.7.0</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
@@ -113,7 +110,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.7</version>
+                <version>2.20.1</version>
                 <configuration>
                     <skipTests>true</skipTests>
                 </configuration>
@@ -121,7 +118,7 @@
             <plugin>
                 <groupId>org.scalatest</groupId>
                 <artifactId>scalatest-maven-plugin</artifactId>
-                <version>1.0</version>
+                <version>2.0.0</version>
                 <configuration>
                     <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
                     <junitxml>.</junitxml>
@@ -139,7 +136,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>2.4.2</version>
+                <version>3.1.0</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -184,7 +181,7 @@
             </activation>
             <properties>
                 <java.version>1.8</java.version>
-                <spark.version>1.6.0</spark.version>
+                <spark.version>1.6.2</spark.version>
                 <spark-scope>provided</spark-scope>
             </properties>
         </profile>
@@ -197,10 +194,10 @@
             </properties>
         </profile>
         <profile>
-            <id>spark-in-intelliJ</id>
+            <id>spark-compile</id>
             <properties>
                 <java.version>1.8</java.version>
-                <spark.version>1.6.0</spark.version>
+                <spark.version>1.6.2</spark.version>
                 <spark-scope>compile</spark-scope>
             </properties>
         </profile>

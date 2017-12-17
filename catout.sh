@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 #
-echo "ID,X,Y,CLUSTER" > ~/Share/moon.txt
-cat /tmp/output/part-* >> ~/Share/moon.txt
+echo "ID,X,Y,CLUSTER" > ~/Share/output.csv
+cat /tmp/output/part-* >> ~/Share/output.csv
 rm -rf /tmp/output

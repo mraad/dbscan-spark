@@ -3,11 +3,12 @@ package com.esri.dbscan
 import java.io.{File, FileReader}
 import java.util.Properties
 
-import org.apache.spark.{Logging, SparkConf, SparkContext}
+import com.esri.dbscan.DBSCANFlag.DBSCANFlag
+import org.apache.spark.{SparkConf, SparkContext}
 
 import scala.collection.JavaConverters._
 
-object DBSCANApp extends App with Logging {
+object DBSCANApp extends App {
 
   type Cluster = (Int, Int, Int) // rowID, colID, clusterID
 
@@ -38,7 +39,8 @@ object DBSCANApp extends App with Logging {
     .set("spark.app.id", "DBSCANApp")
     .registerKryoClasses(Array(
       classOf[Cell],
-      classOf[DBSCAN],
+      classOf[DBSCAN2],
+      classOf[DBSCANFlag],
       classOf[DBSCANPoint],
       classOf[Envp],
       classOf[Graph[Cluster]],
@@ -47,8 +49,6 @@ object DBSCANApp extends App with Logging {
     ))
 
   readAppProperties()
-
-  val t1 = System.currentTimeMillis()
 
   val sc = new SparkContext(conf)
   try {
@@ -69,7 +69,7 @@ object DBSCANApp extends App with Logging {
       .map(line => {
         // Convert each line to a Point instance.
         val tokens = line.split(fieldSeparator)
-        Point(tokens(fieldId).toInt, tokens(fieldX).toDouble, tokens(fieldY).toDouble)
+        Point(tokens(fieldId).toLong, tokens(fieldX).toDouble, tokens(fieldY).toDouble)
       })
       // Emit each point to all neighboring cell (if applicable)
       .flatMap(point => point.toCells(cellSize, eps).map(_ -> point))
@@ -81,7 +81,7 @@ object DBSCANApp extends App with Logging {
           DBSCANPoint(point, cell.row, cell.col, border.isInside(point), inside.toEmitID(point))
         })
         // Perform local DBSCAN on all the points in that cell and identify each local cluster with a negative non-zero value.
-        DBSCAN(eps, minPoints)
+        DBSCAN2(eps, minPoints)
           .cluster(points)
           .zipWithIndex
           .flatMap {
@@ -100,7 +100,7 @@ object DBSCANApp extends App with Logging {
     // Create a graph that relates the distributed local clusters based on their common emitted points.
     val graph = emitted
       .filter(_.emitID > 0)
-      .map(point => point.id ->(point.row, point.col, point.clusterID))
+      .map(point => point.id -> (point.row, point.col, point.clusterID))
       /*
             .map(point => (point.row, point.col, point.emitID, point.clusterID) -> point.id)
             .reduceByKey(_.min(_))
@@ -138,7 +138,4 @@ object DBSCANApp extends App with Logging {
   } finally {
     sc.stop()
   }
-
-  val dt = System.currentTimeMillis() - t1
-  println(s"Execution time = ${dt} millis")
 }

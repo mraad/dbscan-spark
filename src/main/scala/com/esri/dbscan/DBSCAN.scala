@@ -9,6 +9,7 @@ import scala.collection.mutable.ArrayBuffer
   *
   * @param eps       the neighborhood distance.
   * @param minPoints the minimum number of points in a neighborhood to start forming a cluster.
+  * @deprecated in favor of <code>DBSCAN2</code>
   */
 class DBSCAN(eps: Double, minPoints: Int) extends Serializable {
 
@@ -67,7 +68,19 @@ class DBSCAN(eps: Double, minPoints: Int) extends Serializable {
   }
 }
 
+/**
+  * Companion object.
+  *
+  * @deprecated in favor <code>DBSCAN2</code>
+  */
 object DBSCAN extends Serializable {
+  /**
+    * Create a new DBSCAN instance.
+    *
+    * @param eps       the neighborhood distance.
+    * @param minPoints the min number of points in a cluster.
+    * @return a DBSCAN instance.
+    */
   def apply(eps: Double, minPoints: Int) = {
     new DBSCAN(eps, minPoints)
   }

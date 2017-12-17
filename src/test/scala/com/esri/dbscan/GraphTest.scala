@@ -3,9 +3,11 @@ package com.esri.dbscan
 import org.scalatest.{FlatSpec, Matchers}
 
 /**
+  * @todo implement without println !!
   */
 class GraphTest extends FlatSpec with Matchers {
-  "Graph" should "visit nodes" in {
+
+  ignore should "visit nodes" in {
     val gs = new Graph[Int](Map(
       0 -> Set(1, 2, 3, 4),
       1 -> Set(0),
@@ -18,7 +20,7 @@ class GraphTest extends FlatSpec with Matchers {
     gs.traverse(0).foreach(println)
   }
 
-  "Graph" should "construct" in {
+  ignore should "construct" in {
     Graph[Int]()
       .addTwoWay(0, 1)
       .addTwoWay(0, 2)
@@ -29,7 +31,7 @@ class GraphTest extends FlatSpec with Matchers {
       .foreach(println)
   }
 
-  "Graph" should "sum together" in {
+  ignore should "sum together" in {
     val a = Graph[Int]().addTwoWay(0, 1)
     val b = Graph[Int]().addTwoWay(0, 2)
     val c = a + b
@@ -37,7 +39,7 @@ class GraphTest extends FlatSpec with Matchers {
   }
 
 
-  "Graph" should "create global ID" in {
+  ignore should "create global ID" in {
     val g = Graph[Int]()
       .addTwoWay(1, 2)
       .addTwoWay(2, 3)

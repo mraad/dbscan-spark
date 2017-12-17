@@ -2,15 +2,15 @@ organization := "com.esri"
 
 name := "dbscan-spark"
 
-version := "0.1"
+version := "0.3"
 
-scalaVersion := "2.10.5"
+scalaVersion := "2.10.6"
 
 publishMavenStyle := true
 
 resolvers += Resolver.mavenLocal
 
-sparkVersion := "1.6.0"
+sparkVersion := "1.6.2"
 
 sparkComponents := Seq("core")
 

@@ -11,14 +11,14 @@ package com.esri.dbscan
   * @param inside is the point wholly inside the cell.
   * @param emitID the emit identifier.
   */
-class DBSCANPoint(override val id: Int,
-                  override val x: Double,
-                  override val y: Double,
+class DBSCANPoint(val id: Long,
+                  val x: Double,
+                  val y: Double,
                   val row: Int,
                   val col: Int,
                   val inside: Boolean,
                   val emitID: Byte
-                 ) extends Point(id, x, y) {
+                 ) extends Euclid {
 
   /**
     * The cluster identifier.
@@ -49,16 +49,16 @@ class DBSCANPoint(override val id: Int,
 /**
   * Companion object to create DBSCANPoint instance.
   */
-object DBSCANPoint {
+object DBSCANPoint extends Serializable {
   def apply(point: Point) = {
     new DBSCANPoint(point.id, point.x, point.y, 0, 0, true, 0)
   }
 
-  def apply(id: Int, x: Double, y: Double) = {
+  def apply(id: Long, x: Double, y: Double) = {
     new DBSCANPoint(id, x, y, 0, 0, true, 0)
   }
 
-  def apply(id: Int, x: Double, y: Double, emitID: Byte) = {
+  def apply(id: Long, x: Double, y: Double, emitID: Byte) = {
     new DBSCANPoint(id, x, y, 0, 0, true, emitID)
   }
 

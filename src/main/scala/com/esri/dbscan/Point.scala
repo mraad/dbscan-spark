@@ -9,35 +9,7 @@ import scala.collection.mutable.ArrayBuffer
   * @param x  the horizontal 2D placement.
   * @param y  the vertical 2D placement.
   */
-class Point(val id: Int, val x: Double, val y: Double) extends Serializable {
-
-  /**
-    * Check if supplied point is the same as this point. This is a naive implementation as it checks only the point identifier.
-    *
-    * @param other the other point.
-    * @return if the other point id is the same as this point id.
-    */
-  override def equals(other: Any): Boolean = other match {
-    case that: Point => id == that.id
-    case _ => false
-  }
-
-  /**
-    * Hash representation of this point
-    *
-    * @return the hash of the point id.
-    */
-  override def hashCode(): Int = {
-    Smear.smear(id)
-  }
-
-  /*
-    def distance2(that: Point) = {
-      val dx = x - that.x
-      val dy = y - that.y
-      dx * dx + dy * dy
-    }
-  */
+class Point(val id: Long, val x: Double, val y: Double) extends Euclid {
 
   /**
     * Convert this point to a sequence of <code>Cell</code> instances based on its location in its parent cell.
@@ -106,7 +78,7 @@ object Point extends Serializable {
     * @param y  the vertical placement
     * @return a new <code>Point</code> instance.
     */
-  def apply(id: Int, x: Double, y: Double) = {
+  def apply(id: Long, x: Double, y: Double) = {
     new Point(id, x, y)
   }
 }

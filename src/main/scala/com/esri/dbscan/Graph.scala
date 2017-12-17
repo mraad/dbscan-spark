@@ -3,7 +3,7 @@ package com.esri.dbscan
 /**
   * Companion object to create new immutable Graph instance.
   */
-object Graph {
+object Graph extends Serializable {
   /**
     * Create a new immutable Graph where vertices are of type <code>T</code>
     *
