@@ -4,7 +4,7 @@
 
 ### Update 2017-12-17
 
-I've update the core DBSCAN code (`DBSCAN2`) to include noise data that is close to a cluster as part of the cluster. Thanks to Randal W. and Erik H.  And please remember, in this implementation the concept of proximity is based on **bounding box** calculation and not distance squared.
+I've update the core DBSCAN code (`DBSCAN2`) to include noise data that is close to a cluster as part of the cluster. Thanks to Randall W. and Erik H.  And please remember, in this implementation the concept of proximity is based on **bounding box** calculation and not distance squared.
 
 ## Building The Project
 
@@ -92,6 +92,7 @@ import numpy as np
 import matplotlib.colors as clr
 import matplotlib.pyplot as plt
 %matplotlib inline
+%matplotlib notebook
 
 moons = np.genfromtxt('/tmp/moons.txt', delimiter=' ', names=['id', 'x', 'y'])
 plt.figure(1)
