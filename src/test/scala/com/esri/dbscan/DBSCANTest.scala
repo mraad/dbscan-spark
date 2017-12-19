@@ -106,14 +106,15 @@ class DBSCANTest extends FlatSpec with Matchers {
     clusters.head should contain theSameElementsAs points
   }
 
-  ignore should "test Erik's use case using commons math" in {
+  ignore should "test Erik's use case using commons math 3" in {
     val points = Source.fromURL(getClass.getResource("/erik.txt")).getLines().map(line => {
       line.split(' ') match {
         case Array(_, x, y) => new DoublePoint(Array(x.toDouble, y.toDouble))
       }
     }).toSeq
     val clusterer = new DBSCANClusterer[DoublePoint](2, 3)
-    clusterer.cluster(points) should contain theSameElementsAs points
+    val list = clusterer.cluster(points)
+    list should contain theSameElementsAs points
   }
 
 }

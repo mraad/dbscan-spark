@@ -3,7 +3,7 @@ package com.esri.dbscan
 import java.io.{File, FileReader}
 import java.util.Properties
 
-import com.esri.dbscan.DBSCANFlag.DBSCANFlag
+import com.esri.dbscan.DBSCANStatus.DBSCANStatus
 import org.apache.spark.{SparkConf, SparkContext}
 
 import scala.collection.JavaConverters._
@@ -40,7 +40,7 @@ object DBSCANApp extends App {
     .registerKryoClasses(Array(
       classOf[Cell],
       classOf[DBSCAN2],
-      classOf[DBSCANFlag],
+      classOf[DBSCANStatus],
       classOf[DBSCANPoint],
       classOf[Envp],
       classOf[Graph[Cluster]],
