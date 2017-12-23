@@ -50,19 +50,26 @@ class DBSCANPoint(val id: Long,
   * Companion object to create DBSCANPoint instance.
   */
 object DBSCANPoint extends Serializable {
-  def apply(point: Point) = {
+
+  def apply(line: String): DBSCANPoint = {
+    line.split(' ') match {
+      case Array(id, x, y) => apply(id.toLong, x.toDouble, y.toDouble)
+    }
+  }
+
+  def apply(point: Point): DBSCANPoint = {
     new DBSCANPoint(point.id, point.x, point.y, 0, 0, true, 0)
   }
 
-  def apply(id: Long, x: Double, y: Double) = {
+  def apply(id: Long, x: Double, y: Double): DBSCANPoint = {
     new DBSCANPoint(id, x, y, 0, 0, true, 0)
   }
 
-  def apply(id: Long, x: Double, y: Double, emitID: Byte) = {
+  def apply(id: Long, x: Double, y: Double, emitID: Byte): DBSCANPoint = {
     new DBSCANPoint(id, x, y, 0, 0, true, emitID)
   }
 
-  def apply(point: Point, row: Int, col: Int, inside: Boolean, emitID: Byte) = {
+  def apply(point: Point, row: Int, col: Int, inside: Boolean, emitID: Byte): DBSCANPoint = {
     new DBSCANPoint(point.id, point.x, point.y, row, col, inside, emitID)
   }
 }

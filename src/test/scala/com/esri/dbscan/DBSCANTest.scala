@@ -96,14 +96,29 @@ class DBSCANTest extends FlatSpec with Matchers {
   }
 
   it should "test Erik's use case" in {
-    val points = Source.fromURL(getClass.getResource("/erik.txt")).getLines().map(line => {
-      line.split(' ') match {
-        case Array(id, x, y) => DBSCANPoint(id.toInt, x.toDouble, y.toDouble)
-      }
-    }).toIterable
+    val points = Source
+      .fromURL(getClass.getResource("/erik.txt"))
+      .getLines()
+      .map(DBSCANPoint(_))
+      .toIterable
     val clusters = DBSCAN2(2, 3).cluster(points)
     clusters.headOption shouldBe defined
     clusters.head should contain theSameElementsAs points
+  }
+
+  it should "test Randall 0 case, where all points are inside a cell" in {
+    val points = Source
+      .fromURL(getClass.getResource("/randall_0.txt"))
+      .getLines()
+      .map(DBSCANPoint(_))
+      .toIterable
+    val clusters = DBSCAN2(2, 2).cluster(points)
+    clusters.headOption shouldBe defined
+    clusters.head should contain theSameElementsAs Seq(
+      DBSCANPoint("0 29.5 29.5"),
+      DBSCANPoint("1 30.5 29.5"),
+      DBSCANPoint("2 30 30.5")
+    )
   }
 
   ignore should "test Erik's use case using commons math 3" in {

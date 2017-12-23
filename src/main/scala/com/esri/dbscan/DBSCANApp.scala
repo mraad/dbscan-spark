@@ -52,17 +52,23 @@ object DBSCANApp extends App {
 
   val sc = new SparkContext(conf)
   try {
-    val inputPath = conf.get("input.path")
-    val outputPath = conf.get("output.path")
-    val eps = conf.getDouble("dbscan.eps", 5)
-    val minPoints = conf.getInt("dbscan.min.points", 5)
-    val cellSize = conf.getDouble("dbscan.cell.size", eps * 10.0)
-    val numPartitions = conf.getInt("dbscan.num.partitions", 8)
+    doMain(sc, conf)
+  } finally {
+    sc.stop()
+  }
 
-    val fieldSeparator = conf.get("field.separator", " ")(0)
-    val fieldId = conf.getInt("field.id", 0)
-    val fieldX = conf.getInt("field.x", 1)
-    val fieldY = conf.getInt("field.y", 2)
+  def doMain(sc: SparkContext, conf: SparkConf): Unit = {
+    val inputPath = conf.get(DBSCANProp.INPUT_PATH)
+    val outputPath = conf.get(DBSCANProp.OUTPUT_PATH)
+    val eps = conf.getDouble(DBSCANProp.DBSCAN_EPS, 5)
+    val minPoints = conf.getInt(DBSCANProp.DBSCAN_MIN_POINTS, 5)
+    val cellSize = conf.getDouble(DBSCANProp.DBSCAN_CELL_SIZE, eps * 10.0)
+    val numPartitions = conf.getInt(DBSCANProp.DBSCAN_NUM_PARTITIONS, 8)
+
+    val fieldSeparator = conf.get(DBSCANProp.FIELD_SEPARATOR, " ")(0)
+    val fieldId = conf.getInt(DBSCANProp.FIELD_ID, 0)
+    val fieldX = conf.getInt(DBSCANProp.FIELD_X, 1)
+    val fieldY = conf.getInt(DBSCANProp.FIELD_Y, 2)
 
     val emitted = sc
       .textFile(inputPath)
@@ -134,8 +140,5 @@ object DBSCANApp extends App {
       })
       .map(_.toText)
       .saveAsTextFile(outputPath)
-
-  } finally {
-    sc.stop()
   }
 }

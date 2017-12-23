@@ -7,7 +7,7 @@ rm -rf /tmp/output
 spark-submit\
  --master "local[*]"\
  --driver-java-options="-server -Xms1g -Xmx16g"\
- target/dbscan-spark-0.3.jar\
+ target/dbscan-spark-0.4.jar\
  ss-local.properties
 
 # --driver-memory 16G\

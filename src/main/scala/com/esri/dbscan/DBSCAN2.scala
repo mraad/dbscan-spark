@@ -80,7 +80,7 @@ object DBSCAN2 extends Serializable {
     * Create a new DBSCAN instance.
     *
     * @param eps       the neighborhood distance.
-    * @param minPoints the min number of points in a cluster.
+    * @param minPoints the minimum number of points in a neighborhood to start forming a cluster.
     * @return a DBSCAN instance.
     */
   def apply(eps: Double, minPoints: Int): DBSCAN2 = {

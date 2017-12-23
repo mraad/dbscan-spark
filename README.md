@@ -45,7 +45,7 @@ with open("/tmp/moons.txt", "wb") as fw:
 spark-submit\
  --master "local[*]"\
  --driver-java-options="-server -Xms1g -Xmx16g"\
- target/dbscan-spark-0.3.jar\
+ target/dbscan-spark-0.4.jar\
  moons.properties
 ```
 
@@ -148,6 +148,12 @@ The node that is "reducing" `Cell 2` performs a local DBSCAN on `A,B,D` to produ
 Since `A` is in both cluster `P` and `Q` that means `P` and `Q` should be merged into one global cluster `G`.
 We relabel all the points explicitly in the bounding box of the cell from their local cluster class to their associated global cluster class.
 In `Cell 1`, the points `C` and `A` are classed as `G` and in `Cell 2`, the points `B` and `D` are classed as `G` too.
+
+## Cluster ID Nomenclature
+
+The last column in the output CSV files contains the cluster id as a _string_.
+If a formed cluster is wholly within a cell, then the points in that cluster will have a cluster id in the form "cell-row:cell-col:-1".
+If a formed cluster straddles multiple cells, then the points in that cluster will have a cluster id in the form "clusterId", where the content of clusterId consists of only numerical digits, for example "1", "2", etc...
 
 ## Issues (Not Deal Breakers)
 

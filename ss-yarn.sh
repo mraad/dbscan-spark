@@ -7,5 +7,5 @@ spark-submit\
  --num-executors 1\
  --executor-memory 4g\
  --executor-cores 4\
- target/dbscan-spark-0.3.jar\
+ target/dbscan-spark-0.4.jar\
  ss-yarn.properties
