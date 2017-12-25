@@ -184,9 +184,57 @@ If a formed cluster straddles multiple cells, then the points in that cluster wi
 
 ## Notes to self
 
+```bash
+docker run\
+ --rm\
+ --privileged=true\
+ --hostname=quickstart.cloudera\
+ --name quickstart\
+ --volume $(pwd):/dbscan-spark\
+ -t -i cloudera/quickstart\
+ /bin/bash
 ```
+
+```bash
+DAEMONS="\
+ zookeeper-server\
+ hadoop-hdfs-datanode\
+ hadoop-hdfs-namenode\
+ hadoop-httpfs\
+ hadoop-yarn-nodemanager\
+ hadoop-yarn-resourcemanager\
+"
+
+for daemon in ${DAEMONS}; do
+    sudo service ${daemon} start
+done
+```
+
+```bash
+cd /dbscan-spark
+./ss-yarn.sh
+```
+
+```bash
 jupyter notebook --ip=0.0.0.0 --port=8888
 ```
+
+```python
+import matplotlib.colors as clr
+import matplotlib.pyplot as plt
+import numpy as np
+% matplotlib inline
+```
+
+```python
+parts = np.genfromtxt('target/smiley2.csv', delimiter=',', names=['id', 'x', 'y', 'c'])
+colors = ['black', 'red', 'green', 'blue', 'purple']
+plt.figure(2)
+plt.scatter(parts['x'], parts['y'], c=parts['c'], cmap=clr.ListedColormap(colors), lw=0)
+plt.show(block=False)
+```
+
+![](media/smiley2.png)
 
 ```
 docker pull python:2.7

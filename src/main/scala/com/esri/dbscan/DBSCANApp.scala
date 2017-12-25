@@ -12,7 +12,7 @@ object DBSCANApp extends App {
 
   type Cluster = (Int, Int, Int) // rowID, colID, clusterID
 
-  def readAppProperties() = {
+  def readAppProperties(conf: SparkConf): Unit = {
     val filename = args.length match {
       case 0 => "application.properties"
       case _ => args(0)
@@ -32,6 +32,10 @@ object DBSCANApp extends App {
         reader.close()
       }
     }
+    else {
+      Console.err.println(s"The properties file '$filename' does not exist !")
+      sys.exit(-1)
+    }
   }
 
   val conf = new SparkConf()
@@ -48,11 +52,11 @@ object DBSCANApp extends App {
       classOf[SpatialIndex]
     ))
 
-  readAppProperties()
+  readAppProperties(conf)
 
   val sc = new SparkContext(conf)
   try {
-    doMain(sc, conf)
+    doMain(sc, sc.getConf)
   } finally {
     sc.stop()
   }
