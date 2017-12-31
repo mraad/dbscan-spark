@@ -20,7 +20,7 @@ class Point(val id: Long, val x: Double, val y: Double) extends Euclid {
     * @param eps      the neighborhood distance.
     * @return the parent cell and all the neighboring cells if the point is close to the edge.
     */
-  def toCells(cellSize: Double, eps: Double) = {
+  def toCells(cellSize: Double, eps: Double): Seq[Cell] = {
     val xfac = (x / cellSize).floor
     val yfac = (y / cellSize).floor
     val cx = xfac * cellSize
@@ -62,7 +62,7 @@ class Point(val id: Long, val x: Double, val y: Double) extends Euclid {
   /**
     * @return text representation of this instance.
     */
-  override def toString = s"Point($id,$x,$y)"
+  override def toString(): String = s"Point($id,$x,$y)"
 
 }
 

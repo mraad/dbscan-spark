@@ -11,7 +11,7 @@ case class Cell(val row: Int, val col: Int) {
     * @param cellSize the cell size
     * @return the cell envelope
     */
-  def toEnvp(cellSize: Double) = {
+  def toEnvp(cellSize: Double): Envp = {
     val xmin = col * cellSize
     val ymin = row * cellSize
     val xmax = xmin + cellSize

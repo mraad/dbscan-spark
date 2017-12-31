@@ -52,7 +52,7 @@ class Graph[T](vertices: Map[T, Set[T]]) extends Serializable {
     * @param dest the 'to' vertex
     * @return a new Graph instance
     */
-  def addOneWay(orig: T, dest: T) = {
+  def addOneWay(orig: T, dest: T): Graph[T] = {
     vertices.get(orig) match {
       case None =>
         new Graph[T](vertices + (orig -> Set(dest)))
@@ -68,7 +68,7 @@ class Graph[T](vertices: Map[T, Set[T]]) extends Serializable {
     * @param dest the 'to' vertex
     * @return a new Graph instance
     */
-  def addTwoWay(orig: T, dest: T) = {
+  def addTwoWay(orig: T, dest: T): Graph[T] = {
     addOneWay(orig, dest).addOneWay(dest, orig)
   }
 
@@ -96,7 +96,7 @@ class Graph[T](vertices: Map[T, Set[T]]) extends Serializable {
     *
     * @return a dictionary (map) where the key is the vertex and the value is the associated global identifier.
     */
-  def assignGlobalID() = {
+  def assignGlobalID(): Map[T, Int] = {
     val (_, map, _) = vertices
       .keys
       .foldLeft((1, Map[T, Int](), Set[T]())) {
@@ -115,5 +115,5 @@ class Graph[T](vertices: Map[T, Set[T]]) extends Serializable {
   /**
     * @return text representation of this instance.
     */
-  override def toString = s"Graph($vertices)"
+  override def toString(): String = s"Graph($vertices)"
 }

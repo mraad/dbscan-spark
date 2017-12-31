@@ -22,7 +22,7 @@ case class SpatialIndex(eps: Double) {
     * @param point the point to index.
     * @return this spatial index.
     */
-  def +(point: DBSCANPoint) = {
+  def +(point: DBSCANPoint): SpatialIndex = {
     val c = (point.x / eps).floor.toInt
     val r = (point.y / eps).floor.toInt
     grid.getOrElseUpdate((r, c), ArrayBuffer[DBSCANPoint]()) += point
@@ -37,7 +37,7 @@ case class SpatialIndex(eps: Double) {
     * @param point the point to search around.
     * @return a sequence of points that are in the neighborhood of the supplied point.
     */
-  def findNeighbors(point: DBSCANPoint) = {
+  def findNeighbors(point: DBSCANPoint): Seq[DBSCANPoint] = {
     val c = (point.x / eps).floor.toInt
     val r = (point.y / eps).floor.toInt
 

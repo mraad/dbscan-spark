@@ -51,7 +51,7 @@ case class Envp(xmin: Double, ymin: Double, xmax: Double, ymax: Double) {
     * @param offset the shrink value.
     * @return a new shrunk envelope.
     */
-  def shrink(offset: Double) = Envp(xmin + offset, ymin + offset, xmax - offset, ymax - offset)
+  def shrink(offset: Double): Envp = Envp(xmin + offset, ymin + offset, xmax - offset, ymax - offset)
 
   /**
     * Check if supplied point is inside the envelope.

@@ -29,14 +29,14 @@ class DBSCANPoint(val id: Long,
   /**
     * @return global cluster identifier - if the clusterID value is negative then it has to merged with the row and col properties to make it globally unique. A positive value is already globally unique.
     */
-  def globalID = {
+  def globalID(): String = {
     if (clusterID < 0) s"$row:$col:$clusterID" else clusterID.toString
   }
 
   /**
     * @return simple text representation.
     */
-  def toText() = {
+  def toText(): String = {
     s"$id,$x,$y,$globalID"
   }
 
