@@ -5,7 +5,7 @@
 
     <groupId>com.esri</groupId>
     <artifactId>dbscan-spark</artifactId>
-    <version>0.4</version>
+    <version>0.5</version>
     <packaging>jar</packaging>
 
     <properties>

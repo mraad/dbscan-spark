@@ -43,7 +43,7 @@ object DBSCANApp extends App {
     .set("spark.app.id", "DBSCANApp")
     .registerKryoClasses(Array(
       classOf[Cell],
-      classOf[DBSCAN2],
+      classOf[DBSCAN],
       classOf[DBSCANStatus],
       classOf[DBSCANPoint],
       classOf[Envp],
@@ -91,7 +91,7 @@ object DBSCANApp extends App {
           DBSCANPoint(point, cell.row, cell.col, border.isInside(point), inside.toEmitID(point))
         })
         // Perform local DBSCAN on all the points in that cell and identify each local cluster with a negative non-zero value.
-        DBSCAN2(eps, minPoints)
+        DBSCAN(eps, minPoints)
           .cluster(points)
           .zipWithIndex
           .flatMap {

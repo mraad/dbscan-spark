@@ -14,7 +14,7 @@ class DBSCANTest extends FlatSpec with Matchers {
       DBSCANPoint(1, 11, 9)
     )
 
-    val clusters = DBSCAN2(3, 2).cluster(points).toList
+    val clusters = DBSCAN(3, 2).cluster(points).toList
     clusters.headOption shouldBe defined
   }
 
@@ -27,7 +27,7 @@ class DBSCANTest extends FlatSpec with Matchers {
       DBSCANPoint(4, 0, 8),
       DBSCANPoint(5, 3, 0)
     )
-    val clusters = DBSCAN2(2.5, 2).cluster(points)
+    val clusters = DBSCAN(2.5, 2).cluster(points)
     clusters.headOption shouldBe defined
     clusters.head should contain only(points(0), points(1), points(2), points(3), points(4))
   }
@@ -47,7 +47,7 @@ class DBSCANTest extends FlatSpec with Matchers {
       splits.tail.map(_.toInt)
     }).toArray
 
-    val clusters = DBSCAN2(4, 6).cluster(points).toList
+    val clusters = DBSCAN(4, 6).cluster(points).toList
 
     clusters.length shouldBe 6
 
@@ -77,7 +77,7 @@ class DBSCANTest extends FlatSpec with Matchers {
       splits.tail.map(_.toInt)
     }).toArray
 
-    val clusters = DBSCAN2(4, 10).cluster(points).toList
+    val clusters = DBSCAN(4, 10).cluster(points).toList
 
     clusters.length shouldBe 20
 
@@ -101,7 +101,7 @@ class DBSCANTest extends FlatSpec with Matchers {
       .getLines()
       .map(DBSCANPoint(_))
       .toIterable
-    val clusters = DBSCAN2(2, 3).cluster(points)
+    val clusters = DBSCAN(2, 3).cluster(points)
     clusters.headOption shouldBe defined
     clusters.head should contain theSameElementsAs points
   }
@@ -112,7 +112,7 @@ class DBSCANTest extends FlatSpec with Matchers {
       .getLines()
       .map(DBSCANPoint(_))
       .toIterable
-    val clusters = DBSCAN2(2, 2).cluster(points)
+    val clusters = DBSCAN(2, 2).cluster(points)
     clusters.headOption shouldBe defined
     clusters.head should contain theSameElementsAs Seq(
       DBSCANPoint("0 29.5 29.5"),
