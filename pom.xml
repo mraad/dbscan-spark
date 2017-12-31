@@ -14,37 +14,6 @@
         <scala.version>${scala.compact}.6</scala.version>
     </properties>
 
-    <!--
-    <repositories>
-        <repository>
-            <id>cloudera</id>
-            <url>https://repository.cloudera.com/artifactory/cloudera-repos</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>bintray</id>
-            <url>http://dl.bintray.com/mraad/maven</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
-    -->
-
-    <!--
-    <pluginRepositories>
-        <pluginRepository>
-            <id>scala-tools.org</id>
-            <url>https://oss.sonatype.org/content/groups/scala-tools/</url>
-        </pluginRepository>
-    </pluginRepositories>
-    -->
-
     <dependencies>
         <dependency>
             <groupId>org.apache.spark</groupId>
