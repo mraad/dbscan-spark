@@ -69,17 +69,24 @@ object DBSCANApp extends App {
     val cellSize = conf.getDouble(DBSCANProp.DBSCAN_CELL_SIZE, eps * 10.0)
     val numPartitions = conf.getInt(DBSCANProp.DBSCAN_NUM_PARTITIONS, 8)
 
-    val fieldSeparator = conf.get(DBSCANProp.FIELD_SEPARATOR, " ")(0)
+    val fieldSeparator = conf.get(DBSCANProp.FIELD_SEPARATOR, " ") match {
+      case "\t" => '\t'
+      case text: String => text(0)
+    }
     val fieldId = conf.getInt(DBSCANProp.FIELD_ID, 0)
     val fieldX = conf.getInt(DBSCANProp.FIELD_X, 1)
     val fieldY = conf.getInt(DBSCANProp.FIELD_Y, 2)
 
     val emitted = sc
       .textFile(inputPath)
-      .map(line => {
+      .flatMap(line => {
         // Convert each line to a Point instance.
-        val tokens = line.split(fieldSeparator)
-        Point(tokens(fieldId).toLong, tokens(fieldX).toDouble, tokens(fieldY).toDouble)
+        try {
+          val tokens = line.split(fieldSeparator)
+          Some(Point(tokens(fieldId).toLong, tokens(fieldX).toDouble, tokens(fieldY).toDouble))
+        } catch {
+          case _: Throwable => None
+        }
       })
       // Emit each point to all neighboring cell (if applicable)
       .flatMap(point => point.toCells(cellSize, eps).map(_ -> point))
