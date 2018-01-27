@@ -1,7 +1,5 @@
 package com.esri.dbscan
 
-import akka.util.HashCode
-
 /**
   * A 2D location with identification.
   */
@@ -38,8 +36,7 @@ trait Euclid extends Serializable {
     * @return the hash of the point id.
     */
   override def hashCode(): Int = {
-    HashCode.hash(21, id)
-    // Smear.smear(id.toInt)
+    Smear.smear(id.toInt)
   }
 
 }

@@ -1,8 +1,5 @@
 package com.esri.dbscan;
 
-/**
- * @deprecated in favor of built-in akka.HashCode
- */
 public final class Smear
 {
     private Smear()
