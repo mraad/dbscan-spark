@@ -32,7 +32,7 @@ case class SpatialIndex(eps: Double) {
   /**
     * Find all the neighbors of the specified point.
     * This is a "cheap" implementation, where the neighborhood consists of a bounding box centered on the supplied
-    * point, and the width and height of the box are 2 times the spatial index cell size.
+    * point, and the width and height of the box are 2 times the spatial index cell size (eps).
     *
     * @param point the point to search around.
     * @return a sequence of points that are in the neighborhood of the supplied point.

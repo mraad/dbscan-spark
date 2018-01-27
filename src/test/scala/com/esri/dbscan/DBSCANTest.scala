@@ -6,9 +6,10 @@ import org.scalatest._
 import scala.collection.JavaConversions._
 import scala.io.Source
 
+@deprecated
 class DBSCANTest extends FlatSpec with Matchers {
 
-  it should "cluster" in {
+  ignore should "cluster" in {
     val points = Array(
       DBSCANPoint(0, 9, 9),
       DBSCANPoint(1, 11, 9)
@@ -18,7 +19,7 @@ class DBSCANTest extends FlatSpec with Matchers {
     clusters.headOption shouldBe defined
   }
 
-  it should "find one cluster" in {
+  ignore should "find one cluster" in {
     val points = Array(
       DBSCANPoint(0, 0, 0),
       DBSCANPoint(1, 0, 2),
@@ -35,7 +36,7 @@ class DBSCANTest extends FlatSpec with Matchers {
   /**
     * http://people.cs.nctu.edu.tw/~rsliang/dbscan/testdatagen.html
     */
-  it should "have 6 clusters and 20 outliers" in {
+  ignore should "have 6 clusters and 20 outliers" in {
 
     val points = Source.fromURL(getClass.getResource("/dat_4_6_6_20.txt")).getLines().map(line => {
       val splits = line.split(' ')
@@ -65,7 +66,7 @@ class DBSCANTest extends FlatSpec with Matchers {
     }
   }
 
-  it should "have 20 clusters and 20 outliers" in {
+  ignore should "have 20 clusters and 20 outliers" in {
 
     val points = Source.fromURL(getClass.getResource("/dat_4_10_20_20.txt")).getLines().map(line => {
       val splits = line.split(' ')
@@ -95,7 +96,7 @@ class DBSCANTest extends FlatSpec with Matchers {
     }
   }
 
-  it should "test Erik's use case" in {
+  ignore should "test Erik's use case" in {
     val points = Source
       .fromURL(getClass.getResource("/erik.txt"))
       .getLines()
@@ -106,7 +107,7 @@ class DBSCANTest extends FlatSpec with Matchers {
     clusters.head should contain theSameElementsAs points
   }
 
-  it should "test Randall 0 case, where all points are inside a cell" in {
+  ignore should "test Randall 0 case, where all points are inside a cell" in {
     val points = Source
       .fromURL(getClass.getResource("/randall_0.txt"))
       .getLines()
@@ -118,6 +119,21 @@ class DBSCANTest extends FlatSpec with Matchers {
       DBSCANPoint("0 29.5 29.5"),
       DBSCANPoint("1 30.5 29.5"),
       DBSCANPoint("2 30 30.5")
+    )
+  }
+
+  ignore should "test Randall 1 case" in {
+    val points = Seq(
+      DBSCANPoint(0, 37.6, 30.0),
+      DBSCANPoint(1, 39.2, 30.0),
+      DBSCANPoint(2, 40.8, 30.0)
+    )
+    val clusters = DBSCAN(2, 3).cluster(points)
+    clusters.headOption shouldBe defined
+    clusters.head should contain theSameElementsAs Seq(
+      DBSCANPoint(0, 37.6, 30.0),
+      DBSCANPoint(1, 39.2, 30.0),
+      DBSCANPoint(2, 40.8, 30.0)
     )
   }
 

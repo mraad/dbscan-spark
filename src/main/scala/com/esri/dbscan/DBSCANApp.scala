@@ -43,7 +43,7 @@ object DBSCANApp extends App {
     .set("spark.app.id", "DBSCANApp")
     .registerKryoClasses(Array(
       classOf[Cell],
-      classOf[DBSCAN],
+      classOf[DBSCAN2],
       classOf[DBSCANStatus],
       classOf[DBSCANPoint],
       classOf[Envp],
@@ -86,23 +86,28 @@ object DBSCANApp extends App {
       .groupByKey(numPartitions)
       .flatMap { case (cell, pointIter) => {
         val border = cell.toEnvp(cellSize)
+        // Create inner envp
         val inside = border.shrink(eps)
+        // Convert the points to dbscan points.
         val points = pointIter.map(point => {
           DBSCANPoint(point, cell.row, cell.col, border.isInside(point), inside.toEmitID(point))
         })
         // Perform local DBSCAN on all the points in that cell and identify each local cluster with a negative non-zero value.
+        /*
         DBSCAN(eps, minPoints)
           .cluster(points)
           .zipWithIndex
           .flatMap {
-            case (cluster, index) => {
+            case (points, index) => {
               val clusterID = -1 - index
-              cluster.map(point => {
+              points.map(point => {
                 point.clusterID = clusterID
                 point
               })
             }
           }
+          */
+        DBSCAN2(eps, minPoints).cluster(points)
       }
       }
       .cache()

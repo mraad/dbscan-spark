@@ -2,6 +2,10 @@
 
 [DBSCAN](https://en.wikipedia.org/wiki/DBSCAN) implementation on [Apache Spark](http://spark.apache.org/).
 
+### Update 2018-01-27
+
+*Output Change* the output now includes noisy data and will have a clusterID of "0".
+
 ### Update 2017-12-17
 
 I've update the core DBSCAN code (`DBSCAN2`) to include noise data that is close to a cluster as part of the cluster. Thanks to Randall W. and Erik H.  And please remember, in this implementation the concept of proximity is based on **bounding box** calculation and not distance squared.

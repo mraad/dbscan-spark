@@ -10,7 +10,7 @@ spark-submit\
  --master yarn\
  --num-executors 1\
  --executor-memory 2g\
- target/dbscan-spark-0.4.jar\
+ target/dbscan-spark-0.6.jar\
  ss-yarn.properties
 
 hdfs dfs -cat /tmp/output/part-* > target/smiley2.csv

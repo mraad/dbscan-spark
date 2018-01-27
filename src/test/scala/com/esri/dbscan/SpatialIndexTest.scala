@@ -5,7 +5,7 @@ import org.scalatest.{FlatSpec, Matchers}
 /**
   */
 class SpatialIndexTest extends FlatSpec with Matchers {
-  "Grid" should "find 3 points" in {
+  it should "find 3 points" in {
 
     val points = List(
       DBSCANPoint(0, 4, 4),
@@ -24,7 +24,7 @@ class SpatialIndexTest extends FlatSpec with Matchers {
     result should contain allOf(points(0), points(1), points(2))
   }
 
-  "Grid" should "not find points" in {
+  it should "not find points" in {
 
     val points = List(
       DBSCANPoint(3, 1, 1),

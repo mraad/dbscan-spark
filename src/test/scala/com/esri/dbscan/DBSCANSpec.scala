@@ -83,9 +83,10 @@ class DBSCANSpec extends FlatSpec with Matchers {
     val lines1 = Source.fromFile(part1).getLines.toSeq
     val points = (lines0 ++ lines1).map(ClusterPoint(_))
     points should contain theSameElementsAs Seq(
-      ClusterPoint("0,29.5,29.5,1:1:-1"),
-      ClusterPoint("1,30.5,29.5,1:1:-1"),
-      ClusterPoint("2,30.0,30.5,1:1:-1")
+      ClusterPoint(0, 29.5, 29.5, "1:1:-1"),
+      ClusterPoint(1, 30.5, 29.5, "1:1:-1"),
+      ClusterPoint(2, 30.0, 30.5, "1:1:-1"),
+      ClusterPoint(3, 229.5, 229.5, "0")
     )
   }
 
@@ -188,6 +189,38 @@ class DBSCANSpec extends FlatSpec with Matchers {
       ClusterPoint("3,39.5,39.5,1"),
       ClusterPoint("4,40.5,39.5,1"),
       ClusterPoint("5,40.5,40.5,1")
+    )
+  }
+
+  it should "test Randall 4" in {
+    val output = UUID.randomUUID().toString
+    val outputPath = s"target/$output"
+    val conf = new SparkConf()
+    conf.setAppName("DBSCANSpec")
+    conf.setMaster("local[2]")
+    conf.set("spark.ui.enabled", "false")
+    conf.set(DBSCANProp.INPUT_PATH, "src/test/resources/randall_4.txt")
+    conf.set(DBSCANProp.OUTPUT_PATH, outputPath)
+    conf.set(DBSCANProp.DBSCAN_EPS, "2")
+    conf.set(DBSCANProp.DBSCAN_MIN_POINTS, "3")
+    conf.set(DBSCANProp.DBSCAN_NUM_PARTITIONS, "2")
+    val sc = new SparkContext(conf)
+    try {
+      DBSCANApp.doMain(sc, sc.getConf)
+    } finally {
+      sc.stop()
+    }
+    val part0 = new File(outputPath, "part-00000")
+    val part1 = new File(outputPath, "part-00001")
+    part0.exists shouldBe true
+    part1.exists shouldBe true
+    val lines0 = Source.fromFile(part0).getLines.toSeq
+    val lines1 = Source.fromFile(part1).getLines.toSeq
+    val points = (lines0 ++ lines1).map(ClusterPoint(_))
+    points should contain theSameElementsAs Seq(
+      ClusterPoint(2, 40.8, 30.0, "1"),
+      ClusterPoint(0, 37.6, 30.0, "1"),
+      ClusterPoint(1, 39.2, 30.0, "1")
     )
   }
 
