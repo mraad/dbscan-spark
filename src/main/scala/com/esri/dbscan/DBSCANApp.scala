@@ -4,6 +4,7 @@ import java.io.{File, FileReader}
 import java.util.Properties
 
 import com.esri.dbscan.DBSCANStatus.DBSCANStatus
+import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
 
 import scala.collection.JavaConverters._
@@ -61,33 +62,15 @@ object DBSCANApp extends App {
     sc.stop()
   }
 
-  def doMain(sc: SparkContext, conf: SparkConf): Unit = {
-    val inputPath = conf.get(DBSCANProp.INPUT_PATH)
-    val outputPath = conf.get(DBSCANProp.OUTPUT_PATH)
-    val eps = conf.getDouble(DBSCANProp.DBSCAN_EPS, 5)
-    val minPoints = conf.getInt(DBSCANProp.DBSCAN_MIN_POINTS, 5)
-    val cellSize = conf.getDouble(DBSCANProp.DBSCAN_CELL_SIZE, eps * 10.0)
-    val numPartitions = conf.getInt(DBSCANProp.DBSCAN_NUM_PARTITIONS, 8)
+  def dbscan(sc: SparkContext,
+             points: RDD[Point],
+             eps: Double,
+             minPoints: Int,
+             cellSize: Double,
+             numPartitions: Int
+            ): RDD[DBSCANPoint] = {
 
-    val fieldSeparator = conf.get(DBSCANProp.FIELD_SEPARATOR, " ") match {
-      case "\t" => '\t'
-      case text: String => text(0)
-    }
-    val fieldId = conf.getInt(DBSCANProp.FIELD_ID, 0)
-    val fieldX = conf.getInt(DBSCANProp.FIELD_X, 1)
-    val fieldY = conf.getInt(DBSCANProp.FIELD_Y, 2)
-
-    val emitted = sc
-      .textFile(inputPath)
-      .flatMap(line => {
-        // Convert each line to a Point instance.
-        try {
-          val tokens = line.split(fieldSeparator)
-          Some(Point(tokens(fieldId).toLong, tokens(fieldX).toDouble, tokens(fieldY).toDouble))
-        } catch {
-          case _: Throwable => None
-        }
-      })
+    val emitted = points
       // Emit each point to all neighboring cell (if applicable)
       .flatMap(point => point.toCells(cellSize, eps).map(_ -> point))
       .groupByKey(numPartitions)
@@ -96,24 +79,11 @@ object DBSCANApp extends App {
         // Create inner envp
         val inside = border.shrink(eps)
         // Convert the points to dbscan points.
-        val points = pointIter.map(point => {
-          DBSCANPoint(point, cell.row, cell.col, border.isInside(point), inside.toEmitID(point))
-        })
+        val points = pointIter
+          .map(point => {
+            DBSCANPoint(point, cell.row, cell.col, border.isInside(point), inside.toEmitID(point))
+          })
         // Perform local DBSCAN on all the points in that cell and identify each local cluster with a negative non-zero value.
-        /*
-        DBSCAN(eps, minPoints)
-          .cluster(points)
-          .zipWithIndex
-          .flatMap {
-            case (points, index) => {
-              val clusterID = -1 - index
-              points.map(point => {
-                point.clusterID = clusterID
-                point
-              })
-            }
-          }
-          */
         DBSCAN2(eps, minPoints).cluster(points)
       }
       }
@@ -123,13 +93,6 @@ object DBSCANApp extends App {
     val graph = emitted
       .filter(_.emitID > 0)
       .map(point => point.id -> (point.row, point.col, point.clusterID))
-      /*
-            .map(point => (point.row, point.col, point.emitID, point.clusterID) -> point.id)
-            .reduceByKey(_.min(_))
-            .map {
-              case ((row, col, _, clusterID), pointID) => pointID ->(row, col, clusterID)
-            }
-      */
       .groupByKey(numPartitions)
       .aggregate(Graph[Cluster]())(
         (graph, tup) => {
@@ -154,6 +117,36 @@ object DBSCANApp extends App {
           point
         })
       })
+  }
+
+  def doMain(sc: SparkContext, conf: SparkConf): Unit = {
+    val inputPath = conf.get(DBSCANProp.INPUT_PATH)
+    val outputPath = conf.get(DBSCANProp.OUTPUT_PATH)
+    val eps = conf.getDouble(DBSCANProp.DBSCAN_EPS, 5)
+    val minPoints = conf.getInt(DBSCANProp.DBSCAN_MIN_POINTS, 5)
+    val cellSize = conf.getDouble(DBSCANProp.DBSCAN_CELL_SIZE, eps * 10.0)
+    val numPartitions = conf.getInt(DBSCANProp.DBSCAN_NUM_PARTITIONS, 8)
+
+    val fieldSeparator = conf.get(DBSCANProp.FIELD_SEPARATOR, " ") match {
+      case "\t" => '\t'
+      case text: String => text(0)
+    }
+    val fieldId = conf.getInt(DBSCANProp.FIELD_ID, 0)
+    val fieldX = conf.getInt(DBSCANProp.FIELD_X, 1)
+    val fieldY = conf.getInt(DBSCANProp.FIELD_Y, 2)
+
+    val points = sc
+      .textFile(inputPath)
+      .flatMap(line => {
+        // Convert each line to a Point instance.
+        try {
+          val tokens = line.split(fieldSeparator)
+          Some(Point(tokens(fieldId).toLong, tokens(fieldX).toDouble, tokens(fieldY).toDouble))
+        } catch {
+          case _: Throwable => None
+        }
+      })
+    dbscan(sc, points, eps, minPoints, cellSize, numPartitions)
       .map(_.toText)
       .saveAsTextFile(outputPath)
   }

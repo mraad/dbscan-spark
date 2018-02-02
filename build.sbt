@@ -2,7 +2,7 @@ organization := "com.esri"
 
 name := "dbscan-spark"
 
-version := "0.6"
+version := "0.7"
 
 scalaVersion := "2.10.6"
 
